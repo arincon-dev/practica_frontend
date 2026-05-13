@@ -1,4 +1,4 @@
 export interface PuestoDeTrabajo {
-    id: number;
-    nombre: string;
+    id: number | null;
+    nombre: string | null;
 }

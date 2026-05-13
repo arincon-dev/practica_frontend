@@ -114,7 +114,28 @@ export class UserListComponent implements OnInit {
 
   getNombreCompleto(usuario: Usuario): string {
     const segundo = usuario.segundoApellido ? ` ${usuario.segundoApellido}` : '';
-    return `${usuario.primerApellido}${segundo}, ${usuario.nombre}`;
+    return `${usuario.nombre ?? ''} ${usuario.primerApellido ?? ''}${segundo}`.trim();
+  }
+
+  getEdad(usuario: Usuario): number | string {
+    if (!usuario.fechaNacimiento) {
+      return '-';
+    }
+
+    const nacimiento = new Date(usuario.fechaNacimiento);
+    if (Number.isNaN(nacimiento.getTime())) {
+      return '-';
+    }
+
+    const hoy = new Date();
+    let edad = hoy.getFullYear() - nacimiento.getFullYear();
+    const mes = hoy.getMonth() - nacimiento.getMonth();
+
+    if (mes < 0 || (mes === 0 && hoy.getDate() < nacimiento.getDate())) {
+      edad--;
+    }
+
+    return edad;
   }
 
   getDireccionPrincipal(usuario: Usuario): string {
@@ -134,6 +155,20 @@ export class UserListComponent implements OnInit {
   getDireccionesExtra(usuario: Usuario): number {
     const totalDirecciones = usuario.direcciones?.length ?? 0;
     return totalDirecciones > 0 ? totalDirecciones - 1 : 0;
+  }
+
+  getHoraDesayuno(usuario: Usuario): string {
+    const hora = usuario.horaDesayuno;
+
+    if (!hora) {
+      return '-';
+    }
+
+    if (typeof hora === 'string') {
+      return hora.length >= 5 ? hora.substring(0, 5) : hora;
+    }
+
+    return String(hora);
   }
 
   getIconoGenero(usuario: Usuario): string {

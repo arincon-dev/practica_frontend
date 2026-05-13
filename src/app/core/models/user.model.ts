@@ -11,7 +11,7 @@ export interface Usuario {
   genero: Genero;
   primerApellido: string | null;
   segundoApellido: string | null;
-  fechaNacimiento: Date | null;
+  fechaNacimiento: Date | string | null;
   horaDesayuno: string | null;
   puestoTrabajo: PuestoDeTrabajo;
   admin: boolean;

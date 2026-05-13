@@ -38,10 +38,27 @@ export class UserPopupComponent implements OnInit {
 
     constructor(private userService: UserService) {}
 
+    private toDateInputValue(value: Date | string | null): string | null {
+        if (!value) {
+            return null;
+        }
+
+        const date = new Date(value);
+        if (Number.isNaN(date.getTime())) {
+            return null;
+        }
+
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+        return `${year}-${month}-${day}`;
+    }
+
     async ngOnInit() {
         await this.cargarCombo();
         if (this.modo === 'UPDATE' && this.usuarioEditando) {
             this.usuario = { ...this.usuarioEditando };
+            this.usuario.fechaNacimiento = this.toDateInputValue(this.usuario.fechaNacimiento);
             this.direcciones = (this.usuario.direcciones || []).map(d => ({ ...d }));
             this.direccionesOriginales = (this.usuario.direcciones || []).map(d => ({ ...d }));
         } else {
@@ -74,6 +91,11 @@ export class UserPopupComponent implements OnInit {
         if (this.modo === 'CREATE') {
             response = await this.userService.crearUsuario(this.usuario);
         } else {
+            if (!this.usuario.id) {
+                this.loading = false;
+                this.errorMessage = 'No se pudo actualizar: id de usuario inválido.';
+                return;
+            }
             response = await this.userService.actualizarUsuario(this.usuario.id, this.usuario);
         }
 
@@ -104,8 +126,12 @@ export class UserPopupComponent implements OnInit {
             this.direcciones[0].direccionPrincipal = true;
         }
 
-        const originalesIds = new Set((this.direccionesOriginales || []).filter(d => !!d.id).map(d => d.id));
-        const actualesIds = new Set((this.direcciones || []).filter(d => !!d.id).map(d => d.id));
+        const originalesIds = new Set<number>((this.direccionesOriginales || [])
+            .map(d => d.id)
+            .filter((id): id is number => id !== null));
+        const actualesIds = new Set<number>((this.direcciones || [])
+            .map(d => d.id)
+            .filter((id): id is number => id !== null));
 
         for (const originalId of originalesIds) {
             if (!actualesIds.has(originalId)) {
@@ -145,6 +171,10 @@ export class UserPopupComponent implements OnInit {
     }
 
     private validarFormulario(): boolean {
+        const direccionesValidas = this.modo === 'CREATE'
+            ? this.direcciones.length > 0
+            : true;
+
         return !!(
             this.usuario.nickUsuario &&
             this.usuario.nombre &&
@@ -153,7 +183,7 @@ export class UserPopupComponent implements OnInit {
             this.usuario.horaDesayuno &&
             this.usuario.genero?.id &&
             this.usuario.puestoTrabajo?.id &&
-            this.direcciones.length > 0
+            direccionesValidas
         );
     }
 

@@ -101,6 +101,13 @@ export class UserListComponent implements OnInit {
     this.loading = false;
 
     if (Array.isArray(response)) {
+      const httpError = response[0];
+      if (httpError?.status === 401) {
+        localStorage.removeItem(ConstLocalStorage.USUARIO_LOGADO_STORAGE);
+        await this.router.navigate([ConstRoutes.PATH_LOGIN]);
+        return;
+      }
+
       this.errorMessage = 'No se pudieron cargar los usuarios.';
       return;
     }

@@ -146,14 +146,6 @@ export class UserService {
     );
   }
 
-  async obtenerUsuarioPorId(id: number) {
-    return await to(
-        this.http
-            .get<Usuario>('/assets/mocks/user.json')
-            .toPromise()
-    )
-  }
-
   async obtenerUsuarios() {
     const usuarioLogado = obtenerUsuarioLogado();
     const params = new HttpParams()

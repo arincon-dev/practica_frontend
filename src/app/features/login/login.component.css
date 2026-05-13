@@ -2,11 +2,32 @@
   max-width: 300px;
   margin: 50px auto;
   padding: 1em;
-  text-align: center;
   border: 1px solid #ccc;
   border-radius: 4px;
 }
+
+.field {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 0.75em;
+  text-align: left;
+}
+
+label {
+  margin-bottom: 0.25em;
+}
+
+input {
+  padding: 0.45em;
+}
+
+button {
+  width: 100%;
+  margin-top: 0.25em;
+  padding: 0.5em;
+}
+
 .errorClass {
   color: red;
-  margin-top: 1em;
+  margin-top: 0.4em;
 }

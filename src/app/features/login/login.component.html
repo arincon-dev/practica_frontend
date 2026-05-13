@@ -1,4 +1,29 @@
 <div class="login-container">
     <h2>Login</h2>
-    <!-- @TODO: Implement login form here -->
+    <form (ngSubmit)="login()">
+        <div class="field">
+            <label for="username">Usuario</label>
+            <input
+                id="username"
+                name="username"
+                type="text"
+                [(ngModel)]="username"
+            />
+        </div>
+
+        <div class="field">
+            <label for="password">Contrasena</label>
+            <input
+                id="password"
+                name="password"
+                type="password"
+                [(ngModel)]="password"
+            />
+            <div *ngIf="errorMessage" class="errorClass">{{ errorMessage }}</div>
+        </div>
+
+        <button type="submit" [disabled]="isSubmitting">
+            {{ isSubmitting ? 'Cargando...' : 'Login' }}
+        </button>
+    </form>
 </div>

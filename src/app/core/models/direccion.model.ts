@@ -7,7 +7,7 @@ export interface Direccion {
 
     numeroCalle: number;
 
-    usuario: Usuario;
+    usuario: Usuario | null;
 
     direccionPrincipal: boolean;
 }

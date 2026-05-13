@@ -2,94 +2,115 @@
 <div class="dialog-overlay"></div>
 <div class="dialog-box">
     <div class="dialog-title">
-        <h2>{{ modo === 'CREATE' ? 'Crear Usuario' : 'Editar Usuario' }}</h2>
+        <h2>Create User / Edit User</h2>
     </div>
 
     <div class="dialog-content">
-        <!-- Error message -->
         <div *ngIf="errorMessage" class="errorClass">{{ errorMessage }}</div>
 
-        <!-- User form -->
-        <form *ngIf="!loading">
+        <form *ngIf="!loading" class="popup-form-grid">
             <div class="form-group">
-                <label>Nick Usuario *</label>
+                <label>Username</label>
                 <input type="text" [(ngModel)]="usuario.nickUsuario" name="nickUsuario" required>
             </div>
-
             <div class="form-group">
-                <label>Contraseña *</label>
+                <label>Password</label>
                 <input type="password" [(ngModel)]="usuario.contrasena" name="contrasena" required>
             </div>
+            <div class="form-group">
+                <label>Creation Date</label>
+                <input type="text" [value]="usuario.fechaHoraCreacion | date:'yyyy-MM-dd HH:mm'" disabled>
+            </div>
 
             <div class="form-group">
-                <label>Nombre *</label>
+                <label>First Name</label>
                 <input type="text" [(ngModel)]="usuario.nombre" name="nombre" required>
             </div>
-
-            <div class="form-row">
-                <div class="form-group">
-                    <label>Primer Apellido *</label>
-                    <input type="text" [(ngModel)]="usuario.primerApellido" name="primerApellido" required>
-                </div>
-                <div class="form-group">
-                    <label>Segundo Apellido</label>
-                    <input type="text" [(ngModel)]="usuario.segundoApellido" name="segundoApellido">
-                </div>
+            <div class="form-group">
+                <label>First Surname</label>
+                <input type="text" [(ngModel)]="usuario.primerApellido" name="primerApellido" required>
             </div>
-
-            <div class="form-row">
-                <div class="form-group">
-                    <label>Fecha de Nacimiento *</label>
-                    <input type="date" [(ngModel)]="usuario.fechaNacimiento" name="fechaNacimiento" required>
-                </div>
-                <div class="form-group">
-                    <label>Hora Desayuno (HH:mm) *</label>
-                    <input type="time" [(ngModel)]="usuario.horaDesayuno" name="horaDesayuno" required>
-                </div>
-            </div>
-
-            <div class="form-row">
-                <div class="form-group">
-                    <label>Género *</label>
-                    <select [(ngModel)]="usuario.genero.id" name="genero" required>
-                        <option [value]="null">Selecciona un género</option>
-                        <option *ngFor="let g of generos" [value]="g.id">{{ g.nombre }}</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label>Puesto de Trabajo *</label>
-                    <select [(ngModel)]="usuario.puestoTrabajo.id" name="puestoTrabajo" required>
-                        <option [value]="null">Selecciona un puesto</option>
-                        <option *ngFor="let p of puestos" [value]="p.id">{{ p.nombre }}</option>
-                    </select>
-                </div>
+            <div class="form-group">
+                <label>Second Surname</label>
+                <input type="text" [(ngModel)]="usuario.segundoApellido" name="segundoApellido">
             </div>
 
             <div class="form-group">
-                <label>Fecha/Hora Creación (No editable)</label>
-                <input type="text" [value]="usuario.fechaHoraCreacion | date:'yyyy-MM-dd HH:mm'" disabled>
+                <label>BirthDate</label>
+                <input type="date" [(ngModel)]="usuario.fechaNacimiento" name="fechaNacimiento" required>
+            </div>
+            <div class="form-group">
+                <label>Gender</label>
+                <select [(ngModel)]="usuario.genero.id" name="genero" required>
+                    <option [ngValue]="null">Select gender</option>
+                    <option *ngFor="let g of generos" [ngValue]="g.id">{{ g.nombre }}</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Job Position</label>
+                <select [(ngModel)]="usuario.puestoTrabajo.id" name="puestoTrabajo" required>
+                    <option [ngValue]="null">Select job position</option>
+                    <option *ngFor="let p of puestos" [ngValue]="p.id">{{ p.nombre }}</option>
+                </select>
+            </div>
+
+            <div class="form-group form-group-small">
+                <label>Breakfast Time</label>
+                <input type="time" [(ngModel)]="usuario.horaDesayuno" name="horaDesayuno" required>
             </div>
         </form>
 
-        <!-- Addresses section -->
         <div class="addresses-section">
-            <h3>Direcciones *</h3>
-            
-            <div *ngIf="modoDireccion === 'VIEW'" class="table-scroll">
-                <table *ngIf="direcciones.length > 0">
+            <h3>Addresses</h3>
+
+            <div class="container-button">
+                <button type="button" class="main-button" (click)="mostrarFormularioDireccionCrear()">Create</button>
+                <button type="button" class="main-button" [disabled]="selectedDireccionIndex < 0" (click)="mostrarFormularioDireccionEditar()">Update</button>
+                <button type="button" class="main-button-icon" [disabled]="selectedDireccionIndex < 0" (click)="eliminarDireccionSeleccionada()">
+                    🗑
+                </button>
+            </div>
+
+            <div *ngIf="modoDireccion === 'FORM'" class="new-direction-form">
+                <div class="form-row">
+                    <div class="form-column">
+                        <label>Street Name</label>
+                        <input class="form-control" type="text" [(ngModel)]="nuevaDireccion.nombreCalle" name="nombreCalle">
+                    </div>
+                    <div class="form-column small-column">
+                        <label>Number</label>
+                        <input class="form-control" type="number" [(ngModel)]="nuevaDireccion.numeroCalle" name="numeroCalle">
+                    </div>
+                    <div class="form-column inline-actions">
+                        <button type="button" class="default-btn" (click)="onGuardarDireccion()">Save</button>
+                        <button type="button" class="default-btn" (click)="cancelarNuevaDireccion()">Cancel</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="table-scroll">
+                <table *ngIf="direcciones.length > 0; else sinDirecciones">
                     <thead>
                         <tr>
+                            <th></th>
                             <th>Principal</th>
-                            <th>Calle</th>
-                            <th>Número</th>
-                            <th>Acciones</th>
+                            <th>Street Name</th>
+                            <th>Number</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr *ngFor="let dir of direcciones; let i = index">
                             <td>
-                                <input 
-                                    type="radio" 
+                                <input
+                                    type="radio"
+                                    name="direccionSeleccionada"
+                                    [checked]="selectedDireccionIndex === i"
+                                    (change)="seleccionarDireccion(i)"
+                                >
+                            </td>
+                            <td>
+                                <input
+                                    type="radio"
                                     name="direccionPrincipal"
                                     [checked]="dir.direccionPrincipal"
                                     (change)="establecerPrincipal(i)"
@@ -97,41 +118,20 @@
                             </td>
                             <td>{{ dir.nombreCalle }}</td>
                             <td>{{ dir.numeroCalle }}</td>
-                            <td>
-                                <button type="button" (click)="eliminarDireccion(i)">Eliminar</button>
-                            </td>
                         </tr>
                     </tbody>
                 </table>
-                <div *ngIf="direcciones.length === 0" class="no-data">
-                    No hay direcciones agregadas aún.
-                </div>
-                <button type="button" class="add-address-btn" (click)="mostrarFormularioDireccion()">+ Agregar Dirección</button>
-            </div>
-
-            <div *ngIf="modoDireccion === 'NEW'" class="new-direction-form">
-                <div class="form-row">
-                    <div class="form-group">
-                        <label>Calle *</label>
-                        <input type="text" [(ngModel)]="nuevaDireccion.nombreCalle" name="nombreCalle" placeholder="Ej: Calle Principal">
-                    </div>
-                    <div class="form-group">
-                        <label>Número *</label>
-                        <input type="number" [(ngModel)]="nuevaDireccion.numeroCalle" name="numeroCalle" placeholder="Ej: 42">
-                    </div>
-                </div>
-                <div class="form-group-buttons">
-                    <button type="button" (click)="agregarDireccion()">Agregar</button>
-                    <button type="button" (click)="cancelarNuevaDireccion()">Cancelar</button>
-                </div>
+                <ng-template #sinDirecciones>
+                    <div class="no-data">No addresses yet.</div>
+                </ng-template>
             </div>
         </div>
 
         <div *ngIf="loading">Guardando usuario...</div>
     </div>
 
-    <div class="dialog-actions">
-        <button class="btn-accept" (click)="onSave()" [disabled]="loading">Aceptar</button>
-        <button class="btn-cancel" (click)="onCancel()" [disabled]="loading">Cancelar</button>
+    <div class="container-button-right">
+        <button class="main-button" (click)="onSave()" [disabled]="loading">Save</button>
+        <button class="main-button default-btn" (click)="onCancel()" [disabled]="loading">Cancel</button>
     </div>
 </div>

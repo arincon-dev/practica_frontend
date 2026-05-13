@@ -26,13 +26,15 @@ export class UserPopupComponent implements OnInit {
     generos: Genero[] = [];
     puestos: PuestoDeTrabajo[] = [];
     direcciones: Direccion[] = [];
+    direccionesOriginales: Direccion[] = [];
     selectedDireccionIndex: number = -1;
     
     loading: boolean = false;
     errorMessage: string = '';
     
     nuevaDireccion: Direccion = { id: null, nombreCalle: '', numeroCalle: null, usuario: null, direccionPrincipal: false };
-    modoDireccion: 'VIEW' | 'NEW' | 'EDIT' = 'VIEW';
+    modoDireccion: 'VIEW' | 'FORM' = 'VIEW';
+    editandoDireccionIndex: number = -1;
 
     constructor(private userService: UserService) {}
 
@@ -40,10 +42,12 @@ export class UserPopupComponent implements OnInit {
         await this.cargarCombo();
         if (this.modo === 'UPDATE' && this.usuarioEditando) {
             this.usuario = { ...this.usuarioEditando };
-            this.direcciones = this.usuario.direcciones || [];
+            this.direcciones = (this.usuario.direcciones || []).map(d => ({ ...d }));
+            this.direccionesOriginales = (this.usuario.direcciones || []).map(d => ({ ...d }));
         } else {
             this.usuario = { ...usuarioInicial };
             this.direcciones = [];
+            this.direccionesOriginales = [];
         }
     }
 
@@ -80,7 +84,60 @@ export class UserPopupComponent implements OnInit {
             return;
         }
 
+        const userId = response.body?.data?.id ?? this.usuario.id;
+        const syncOk = await this.sincronizarDirecciones(userId);
+
+        if (!syncOk) {
+            this.errorMessage = 'Usuario guardado, pero hubo un error al sincronizar direcciones.';
+            return;
+        }
+
         this.cerrarPopUpOk.emit();
+    }
+
+    private async sincronizarDirecciones(userId: number | null): Promise<boolean> {
+        if (!userId) {
+            return false;
+        }
+
+        if (this.direcciones.length > 0 && !this.direcciones.some(d => d.direccionPrincipal)) {
+            this.direcciones[0].direccionPrincipal = true;
+        }
+
+        const originalesIds = new Set((this.direccionesOriginales || []).filter(d => !!d.id).map(d => d.id));
+        const actualesIds = new Set((this.direcciones || []).filter(d => !!d.id).map(d => d.id));
+
+        for (const originalId of originalesIds) {
+            if (!actualesIds.has(originalId)) {
+                const deleteResponse = await this.userService.eliminarDireccion(originalId);
+                if (Array.isArray(deleteResponse)) {
+                    return false;
+                }
+            }
+        }
+
+        const noPrincipales = this.direcciones.filter(d => !d.direccionPrincipal);
+        const principales = this.direcciones.filter(d => d.direccionPrincipal);
+        const ordenPersistencia = [...noPrincipales, ...principales];
+
+        for (const direccion of ordenPersistencia) {
+            if (direccion.id) {
+                const updateResponse = await this.userService.actualizarDireccion(direccion.id, userId, direccion);
+                if (Array.isArray(updateResponse)) {
+                    return false;
+                }
+                continue;
+            }
+
+            const createResponse = await this.userService.crearDireccion(userId, direccion);
+            if (Array.isArray(createResponse)) {
+                return false;
+            }
+
+            direccion.id = createResponse.body?.data?.id ?? null;
+        }
+
+        return true;
     }
 
     onCancel() {
@@ -118,7 +175,28 @@ export class UserPopupComponent implements OnInit {
         this.direcciones.push(dir);
         this.nuevaDireccion = { id: null, nombreCalle: '', numeroCalle: null, usuario: null, direccionPrincipal: false };
         this.modoDireccion = 'VIEW';
+        this.editandoDireccionIndex = -1;
         this.errorMessage = '';
+    }
+
+    actualizarDireccion() {
+        if (this.editandoDireccionIndex < 0 || this.editandoDireccionIndex >= this.direcciones.length) {
+            return;
+        }
+
+        if (!this.nuevaDireccion.nombreCalle || this.nuevaDireccion.numeroCalle === null) {
+            this.errorMessage = 'Completa nombre y número de calle.';
+            return;
+        }
+
+        const anterior = this.direcciones[this.editandoDireccionIndex];
+        this.direcciones[this.editandoDireccionIndex] = {
+            ...anterior,
+            nombreCalle: this.nuevaDireccion.nombreCalle,
+            numeroCalle: this.nuevaDireccion.numeroCalle
+        };
+
+        this.cancelarNuevaDireccion();
     }
 
     eliminarDireccion(index: number) {
@@ -132,6 +210,18 @@ export class UserPopupComponent implements OnInit {
         }
     }
 
+    eliminarDireccionSeleccionada() {
+        if (this.selectedDireccionIndex < 0 || this.selectedDireccionIndex >= this.direcciones.length) {
+            return;
+        }
+
+        this.eliminarDireccion(this.selectedDireccionIndex);
+    }
+
+    seleccionarDireccion(index: number) {
+        this.selectedDireccionIndex = index;
+    }
+
     establecerPrincipal(index: number) {
         this.direcciones.forEach((d, i) => d.direccionPrincipal = (i === index));
     }
@@ -139,11 +229,40 @@ export class UserPopupComponent implements OnInit {
     cancelarNuevaDireccion() {
         this.nuevaDireccion = { id: null, nombreCalle: '', numeroCalle: null, usuario: null, direccionPrincipal: false };
         this.modoDireccion = 'VIEW';
+        this.editandoDireccionIndex = -1;
         this.errorMessage = '';
     }
 
-    mostrarFormularioDireccion() {
-        this.modoDireccion = 'NEW';
+    mostrarFormularioDireccionCrear() {
+        this.modoDireccion = 'FORM';
         this.selectedDireccionIndex = -1;
+        this.editandoDireccionIndex = -1;
+        this.nuevaDireccion = { id: null, nombreCalle: '', numeroCalle: null, usuario: null, direccionPrincipal: false };
+    }
+
+    mostrarFormularioDireccionEditar() {
+        if (this.selectedDireccionIndex < 0 || this.selectedDireccionIndex >= this.direcciones.length) {
+            return;
+        }
+
+        const dir = this.direcciones[this.selectedDireccionIndex];
+        this.modoDireccion = 'FORM';
+        this.editandoDireccionIndex = this.selectedDireccionIndex;
+        this.nuevaDireccion = {
+            id: dir.id,
+            nombreCalle: dir.nombreCalle,
+            numeroCalle: dir.numeroCalle,
+            usuario: dir.usuario,
+            direccionPrincipal: dir.direccionPrincipal
+        };
+    }
+
+    onGuardarDireccion() {
+        if (this.editandoDireccionIndex >= 0) {
+            this.actualizarDireccion();
+            return;
+        }
+
+        this.agregarDireccion();
     }
 }

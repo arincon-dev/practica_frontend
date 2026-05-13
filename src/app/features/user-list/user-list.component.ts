@@ -59,14 +59,20 @@ export class UserListComponent implements OnInit {
     this.usuarioEnEdicion = this.usuarios[this.selectedUserIndex];
   }
 
-  async abrirEliminarUsuario() {
+  abrirEliminarUsuario() {
     if (this.selectedUserIndex < 0 || this.selectedUserIndex >= this.usuarios.length) {
       return;
     }
-    const confirmado = confirm(`¿Estás seguro de que deseas eliminar a ${this.usuarios[this.selectedUserIndex].nombre}?`);
-    if (confirmado) {
-      await this.eliminarUsuario();
-    }
+    this.modoPopup = 'DELETE';
+  }
+
+  cancelarEliminarUsuario() {
+    this.modoPopup = 'CLOSED';
+  }
+
+  async confirmarEliminarUsuario() {
+    await this.eliminarUsuario();
+    this.modoPopup = 'CLOSED';
   }
 
   async eliminarUsuario() {
@@ -114,28 +120,7 @@ export class UserListComponent implements OnInit {
 
   getNombreCompleto(usuario: Usuario): string {
     const segundo = usuario.segundoApellido ? ` ${usuario.segundoApellido}` : '';
-    return `${usuario.nombre ?? ''} ${usuario.primerApellido ?? ''}${segundo}`.trim();
-  }
-
-  getEdad(usuario: Usuario): number | string {
-    if (!usuario.fechaNacimiento) {
-      return '-';
-    }
-
-    const nacimiento = new Date(usuario.fechaNacimiento);
-    if (Number.isNaN(nacimiento.getTime())) {
-      return '-';
-    }
-
-    const hoy = new Date();
-    let edad = hoy.getFullYear() - nacimiento.getFullYear();
-    const mes = hoy.getMonth() - nacimiento.getMonth();
-
-    if (mes < 0 || (mes === 0 && hoy.getDate() < nacimiento.getDate())) {
-      edad--;
-    }
-
-    return edad;
+    return `${usuario.primerApellido ?? ''}${segundo}, ${usuario.nombre ?? ''}`.trim();
   }
 
   getDireccionPrincipal(usuario: Usuario): string {
@@ -174,11 +159,11 @@ export class UserListComponent implements OnInit {
   getIconoGenero(usuario: Usuario): string {
     const genero = (usuario.genero?.nombre ?? '').toLowerCase();
 
-    if (genero === 'hombre') {
+    if (genero === 'hombre' || genero === 'male') {
       return '♂';
     }
 
-    if (genero === 'mujer') {
+    if (genero === 'mujer' || genero === 'female') {
       return '♀';
     }
 

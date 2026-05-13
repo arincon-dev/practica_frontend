@@ -18,7 +18,7 @@ export class UserService {
       id: user?.id ?? null,
       nickUsuario: user?.username ?? null,
       nombre: user?.name ?? null,
-      contrasena: null,
+      contrasena: user?.password ?? null,
       fechaHoraCreacion: user?.createdAt ? new Date(user.createdAt) : new Date(),
       genero: {
         id: user?.gender?.id ?? null,

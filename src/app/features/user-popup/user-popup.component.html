@@ -2,10 +2,136 @@
 <div class="dialog-overlay"></div>
 <div class="dialog-box">
     <div class="dialog-title">
-        <h2>Pop Up</h2>
+        <h2>{{ modo === 'CREATE' ? 'Crear Usuario' : 'Editar Usuario' }}</h2>
     </div>
 
-    <button (click)="onSave()">Aceptar</button>
-    <button (click)="onCancel()">Cancelar</button>
-    <!-- @TODO: Implementar el contenido del pop up, así como los botones de acción (ej. Cancelar, Aceptar) -->
+    <div class="dialog-content">
+        <!-- Error message -->
+        <div *ngIf="errorMessage" class="errorClass">{{ errorMessage }}</div>
+
+        <!-- User form -->
+        <form *ngIf="!loading">
+            <div class="form-group">
+                <label>Nick Usuario *</label>
+                <input type="text" [(ngModel)]="usuario.nickUsuario" name="nickUsuario" required>
+            </div>
+
+            <div class="form-group">
+                <label>Contraseña *</label>
+                <input type="password" [(ngModel)]="usuario.contrasena" name="contrasena" required>
+            </div>
+
+            <div class="form-group">
+                <label>Nombre *</label>
+                <input type="text" [(ngModel)]="usuario.nombre" name="nombre" required>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Primer Apellido *</label>
+                    <input type="text" [(ngModel)]="usuario.primerApellido" name="primerApellido" required>
+                </div>
+                <div class="form-group">
+                    <label>Segundo Apellido</label>
+                    <input type="text" [(ngModel)]="usuario.segundoApellido" name="segundoApellido">
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Fecha de Nacimiento *</label>
+                    <input type="date" [(ngModel)]="usuario.fechaNacimiento" name="fechaNacimiento" required>
+                </div>
+                <div class="form-group">
+                    <label>Hora Desayuno (HH:mm) *</label>
+                    <input type="time" [(ngModel)]="usuario.horaDesayuno" name="horaDesayuno" required>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Género *</label>
+                    <select [(ngModel)]="usuario.genero.id" name="genero" required>
+                        <option [value]="null">Selecciona un género</option>
+                        <option *ngFor="let g of generos" [value]="g.id">{{ g.nombre }}</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Puesto de Trabajo *</label>
+                    <select [(ngModel)]="usuario.puestoTrabajo.id" name="puestoTrabajo" required>
+                        <option [value]="null">Selecciona un puesto</option>
+                        <option *ngFor="let p of puestos" [value]="p.id">{{ p.nombre }}</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Fecha/Hora Creación (No editable)</label>
+                <input type="text" [value]="usuario.fechaHoraCreacion | date:'yyyy-MM-dd HH:mm'" disabled>
+            </div>
+        </form>
+
+        <!-- Addresses section -->
+        <div class="addresses-section">
+            <h3>Direcciones *</h3>
+            
+            <div *ngIf="modoDireccion === 'VIEW'" class="table-scroll">
+                <table *ngIf="direcciones.length > 0">
+                    <thead>
+                        <tr>
+                            <th>Principal</th>
+                            <th>Calle</th>
+                            <th>Número</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let dir of direcciones; let i = index">
+                            <td>
+                                <input 
+                                    type="radio" 
+                                    name="direccionPrincipal"
+                                    [checked]="dir.direccionPrincipal"
+                                    (change)="establecerPrincipal(i)"
+                                >
+                            </td>
+                            <td>{{ dir.nombreCalle }}</td>
+                            <td>{{ dir.numeroCalle }}</td>
+                            <td>
+                                <button type="button" (click)="eliminarDireccion(i)">Eliminar</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div *ngIf="direcciones.length === 0" class="no-data">
+                    No hay direcciones agregadas aún.
+                </div>
+                <button type="button" class="add-address-btn" (click)="mostrarFormularioDireccion()">+ Agregar Dirección</button>
+            </div>
+
+            <div *ngIf="modoDireccion === 'NEW'" class="new-direction-form">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Calle *</label>
+                        <input type="text" [(ngModel)]="nuevaDireccion.nombreCalle" name="nombreCalle" placeholder="Ej: Calle Principal">
+                    </div>
+                    <div class="form-group">
+                        <label>Número *</label>
+                        <input type="number" [(ngModel)]="nuevaDireccion.numeroCalle" name="numeroCalle" placeholder="Ej: 42">
+                    </div>
+                </div>
+                <div class="form-group-buttons">
+                    <button type="button" (click)="agregarDireccion()">Agregar</button>
+                    <button type="button" (click)="cancelarNuevaDireccion()">Cancelar</button>
+                </div>
+            </div>
+        </div>
+
+        <div *ngIf="loading">Guardando usuario...</div>
+    </div>
+
+    <div class="dialog-actions">
+        <button class="btn-accept" (click)="onSave()" [disabled]="loading">Aceptar</button>
+        <button class="btn-cancel" (click)="onCancel()" [disabled]="loading">Cancelar</button>
+    </div>
 </div>

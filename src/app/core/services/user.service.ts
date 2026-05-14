@@ -3,7 +3,7 @@ import {HttpClient, HttpParams} from '@angular/common/http';
 import { Usuario } from '../models/user.model';
 import to from "./utils.service";
 import ConstUrls from "../../shared/contants/const-urls";
-import { obtenerUsuarioLogado } from './utils.service';
+import { loadCredentials } from './utils.service';
 import { Direccion } from '../models/direccion.model';
 
 
@@ -12,6 +12,10 @@ import { Direccion } from '../models/direccion.model';
 })
 export class UserService {
   constructor(private http: HttpClient) {}
+
+  private withCredentialsParams(): HttpParams {
+    return loadCredentials();
+  }
 
   private mapBackendUser(user: any): Usuario {
     return {
@@ -61,14 +65,12 @@ export class UserService {
       return [];
     }
 
-    const usuarioLogado = obtenerUsuarioLogado();
-    const params = new HttpParams()
-      .set('nickUsuario', usuarioLogado?.nickUsuario ?? '')
-      .set('nickContrasena', usuarioLogado?.contrasena ?? '');
-
     const response = await to(
       this.http
-        .get(`${ConstUrls.API_URL}/api/v1/direcciones/usuario/${userId}`, { params, observe: 'response' })
+        .get(`${ConstUrls.API_URL}/api/v1/direcciones/usuario/${userId}`, {
+          params: this.withCredentialsParams(),
+          observe: 'response'
+        })
         .toPromise()
     );
 
@@ -80,44 +82,38 @@ export class UserService {
   }
 
   async crearDireccion(userId: number, direccion: Direccion) {
-    const usuarioLogado = obtenerUsuarioLogado();
-    const params = new HttpParams()
-      .set('nickUsuario', usuarioLogado?.nickUsuario ?? '')
-      .set('nickContrasena', usuarioLogado?.contrasena ?? '');
-
     const payload = this.toAddressRequestDto(userId, direccion);
 
-    return await to(
+    return to(
       this.http
-        .post(`${ConstUrls.API_URL}/api/v1/direcciones/`, payload, { params, observe: 'response' })
+        .post(`${ConstUrls.API_URL}/api/v1/direcciones/`, payload, {
+          params: this.withCredentialsParams(),
+          observe: 'response'
+        })
         .toPromise()
     );
   }
 
   async actualizarDireccion(id: number, userId: number, direccion: Direccion) {
-    const usuarioLogado = obtenerUsuarioLogado();
-    const params = new HttpParams()
-      .set('nickUsuario', usuarioLogado?.nickUsuario ?? '')
-      .set('nickContrasena', usuarioLogado?.contrasena ?? '');
-
     const payload = this.toAddressRequestDto(userId, direccion);
 
-    return await to(
+    return to(
       this.http
-        .put(`${ConstUrls.API_URL}/api/v1/direcciones/${id}`, payload, { params, observe: 'response' })
+        .put(`${ConstUrls.API_URL}/api/v1/direcciones/${id}`, payload, {
+          params: this.withCredentialsParams(),
+          observe: 'response'
+        })
         .toPromise()
     );
   }
 
   async eliminarDireccion(id: number) {
-    const usuarioLogado = obtenerUsuarioLogado();
-    const params = new HttpParams()
-      .set('nickUsuario', usuarioLogado?.nickUsuario ?? '')
-      .set('nickContrasena', usuarioLogado?.contrasena ?? '');
-
-    return await to(
+    return to(
       this.http
-        .delete(`${ConstUrls.API_URL}/api/v1/direcciones/${id}`, { params, observe: 'response' })
+        .delete(`${ConstUrls.API_URL}/api/v1/direcciones/${id}`, {
+          params: this.withCredentialsParams(),
+          observe: 'response'
+        })
         .toPromise()
     );
   }
@@ -139,7 +135,7 @@ export class UserService {
 
   async iniciarSesion(username: string, password: string) {
     const url = `${ConstUrls.API_URL}/api/v1/usuarios/iniciar-sesion?username=${encodeURIComponent(username)}&password=${encodeURIComponent(password)}`;
-    return await to(
+    return to(
         this.http
             .post(url, null, { observe: 'response' })
             .toPromise()
@@ -147,14 +143,12 @@ export class UserService {
   }
 
   async obtenerUsuarios() {
-    const usuarioLogado = obtenerUsuarioLogado();
-    const params = new HttpParams()
-      .set('nickUsuario', usuarioLogado?.nickUsuario ?? '')
-      .set('nickContrasena', usuarioLogado?.contrasena ?? '');
-
     const response = await to(
         this.http
-        .get<Usuario[]>(`${ConstUrls.API_URL}/api/v1/usuarios/`, { params, observe: 'response' })
+        .get<Usuario[]>(`${ConstUrls.API_URL}/api/v1/usuarios/`, {
+          params: this.withCredentialsParams(),
+          observe: 'response'
+        })
             .toPromise()
     );
 
@@ -183,14 +177,12 @@ export class UserService {
   }
 
   async obtenerGeneros() {
-    const usuarioLogado = obtenerUsuarioLogado();
-    const params = new HttpParams()
-      .set('nickUsuario', usuarioLogado?.nickUsuario ?? '')
-      .set('nickContrasena', usuarioLogado?.contrasena ?? '');
-
     const response = await to(
         this.http
-        .get(`${ConstUrls.API_URL}/api/v1/usuarios/generos`, { params, observe: 'response' })
+        .get(`${ConstUrls.API_URL}/api/v1/usuarios/generos`, {
+          params: this.withCredentialsParams(),
+          observe: 'response'
+        })
             .toPromise()
     );
 
@@ -213,14 +205,12 @@ export class UserService {
   }
 
   async obtenerPuestos() {
-    const usuarioLogado = obtenerUsuarioLogado();
-    const params = new HttpParams()
-      .set('nickUsuario', usuarioLogado?.nickUsuario ?? '')
-      .set('nickContrasena', usuarioLogado?.contrasena ?? '');
-
     const response = await to(
         this.http
-        .get(`${ConstUrls.API_URL}/api/v1/usuarios/puestos-de-trabajo`, { params, observe: 'response' })
+        .get(`${ConstUrls.API_URL}/api/v1/usuarios/puestos-de-trabajo`, {
+          params: this.withCredentialsParams(),
+          observe: 'response'
+        })
             .toPromise()
     );
 
@@ -243,46 +233,40 @@ export class UserService {
   }
 
   async crearUsuario(usuario: Usuario) {
-    const usuarioLogado = obtenerUsuarioLogado();
-    const params = new HttpParams()
-      .set('nickUsuario', usuarioLogado?.nickUsuario ?? '')
-      .set('nickContrasena', usuarioLogado?.contrasena ?? '');
-
     const payload = this.toUserRequestDto(usuario);
 
-    return await to(
+    return to(
         this.http
-        .post(`${ConstUrls.API_URL}/api/v1/usuarios/`, payload, { params, observe: 'response' })
+        .post(`${ConstUrls.API_URL}/api/v1/usuarios/`, payload, {
+          params: this.withCredentialsParams(),
+          observe: 'response'
+        })
             .toPromise()
-    )
+    );
   }
 
   async actualizarUsuario(id: number, usuario: Usuario) {
-    const usuarioLogado = obtenerUsuarioLogado();
-    const params = new HttpParams()
-      .set('nickUsuario', usuarioLogado?.nickUsuario ?? '')
-      .set('nickContrasena', usuarioLogado?.contrasena ?? '');
-
     const payload = this.toUserRequestDto(usuario);
 
-    return await to(
+    return to(
         this.http
-        .put(`${ConstUrls.API_URL}/api/v1/usuarios/${id}`, payload, { params, observe: 'response' })
+        .put(`${ConstUrls.API_URL}/api/v1/usuarios/${id}`, payload, {
+          params: this.withCredentialsParams(),
+          observe: 'response'
+        })
             .toPromise()
-    )
+    );
   }
 
   async eliminarUsuario(id: number) {
-    const usuarioLogado = obtenerUsuarioLogado();
-    const params = new HttpParams()
-      .set('nickUsuario', usuarioLogado?.nickUsuario ?? '')
-      .set('nickContrasena', usuarioLogado?.contrasena ?? '');
-
-    return await to(
+    return to(
         this.http
-        .delete(`${ConstUrls.API_URL}/api/v1/usuarios/${id}`, { params, observe: 'response' })
+        .delete(`${ConstUrls.API_URL}/api/v1/usuarios/${id}`, {
+          params: this.withCredentialsParams(),
+          observe: 'response'
+        })
             .toPromise()
-    )
+    );
   }
 
 }

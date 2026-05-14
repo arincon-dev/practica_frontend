@@ -34,11 +34,21 @@ export class UserPopupComponent implements OnInit {
     fechaNacimientoUi: string = '';
     horaDesayunoUi: string = '';
     
-    nuevaDireccion: Direccion = { id: null, nombreCalle: '', numeroCalle: null, usuario: null, direccionPrincipal: false };
+    nuevaDireccion: Direccion = this.createEmptyDireccion();
     modoDireccion: 'VIEW' | 'FORM' = 'VIEW';
     editandoDireccionIndex: number = -1;
 
     constructor(private userService: UserService) {}
+
+    private createEmptyDireccion(): Direccion {
+        return { id: null, nombreCalle: '', numeroCalle: null, usuario: null, direccionPrincipal: false };
+    }
+
+    private resetDireccionDraft(): void {
+        this.nuevaDireccion = this.createEmptyDireccion();
+        this.modoDireccion = 'VIEW';
+        this.editandoDireccionIndex = -1;
+    }
 
     private toDateInputValue(value: Date | string | null): string | null {
         if (!value) {
@@ -295,9 +305,7 @@ export class UserPopupComponent implements OnInit {
         };
 
         this.direcciones.push(dir);
-        this.nuevaDireccion = { id: null, nombreCalle: '', numeroCalle: null, usuario: null, direccionPrincipal: false };
-        this.modoDireccion = 'VIEW';
-        this.editandoDireccionIndex = -1;
+        this.resetDireccionDraft();
         this.errorMessage = '';
     }
 
@@ -349,9 +357,7 @@ export class UserPopupComponent implements OnInit {
     }
 
     cancelarNuevaDireccion() {
-        this.nuevaDireccion = { id: null, nombreCalle: '', numeroCalle: null, usuario: null, direccionPrincipal: false };
-        this.modoDireccion = 'VIEW';
-        this.editandoDireccionIndex = -1;
+        this.resetDireccionDraft();
         this.errorMessage = '';
     }
 
@@ -359,7 +365,7 @@ export class UserPopupComponent implements OnInit {
         this.modoDireccion = 'FORM';
         this.selectedDireccionIndex = -1;
         this.editandoDireccionIndex = -1;
-        this.nuevaDireccion = { id: null, nombreCalle: '', numeroCalle: null, usuario: null, direccionPrincipal: false };
+        this.nuevaDireccion = this.createEmptyDireccion();
     }
 
     mostrarFormularioDireccionEditar() {

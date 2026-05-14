@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import {Router} from "@angular/router";
 import { UserPopupComponent } from '../user-popup/user-popup.component';
 import { UserService } from '../../core/services/user.service';
@@ -15,16 +15,12 @@ import ConstLocalStorage from '../../shared/contants/const-local-storage';
   imports: [ CommonModule, UserPopupComponent ]
 })
 export class UserListComponent implements OnInit {
-  @Output() cerrarPopUpOk = new EventEmitter<void>();
-  @Output() cerrarPopUpCancel = new EventEmitter<void>();
-
   modoPopup: 'CLOSED' | 'CREATE' | 'UPDATE' | 'DELETE' = 'CLOSED';
   usuarioEnEdicion: Usuario | null = null;
   usuarios: Usuario[] = [];
   selectedUserIndex: number = 0;
   loading: boolean = false;
   errorMessage: string = '';
-  deleteConfirming: boolean = false;
 
   constructor(private router: Router, private userService: UserService) {
 

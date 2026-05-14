@@ -31,6 +31,8 @@ export class UserPopupComponent implements OnInit {
     
     loading: boolean = false;
     errorMessage: string = '';
+    fechaNacimientoUi: string = '';
+    horaDesayunoUi: string = '';
     
     nuevaDireccion: Direccion = { id: null, nombreCalle: '', numeroCalle: null, usuario: null, direccionPrincipal: false };
     modoDireccion: 'VIEW' | 'FORM' = 'VIEW';
@@ -54,15 +56,90 @@ export class UserPopupComponent implements OnInit {
         return `${year}-${month}-${day}`;
     }
 
+    private formatFechaNacimientoUi(value: Date | string | null): string {
+        const isoDate = this.toDateInputValue(value);
+        if (!isoDate) {
+            return '';
+        }
+
+        const [year, month, day] = isoDate.split('-');
+        return `${day}/${month}/${year}`;
+    }
+
+    private normalizeHoraDesayuno(value: unknown): string {
+        if (!value) {
+            return '';
+        }
+
+        const raw = String(value).trim();
+        const match = raw.match(/^(\d{1,2}):(\d{2})(?::\d{2})?$/);
+        if (!match) {
+            return '';
+        }
+
+        const hours = Number(match[1]);
+        const minutes = Number(match[2]);
+
+        if (hours < 0 || hours > 23 || minutes < 0 || minutes > 59) {
+            return '';
+        }
+
+        return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}`;
+    }
+
+    private toIsoDateFromUi(value: string): string | null {
+        const trimmed = value.trim();
+        const match = trimmed.match(/^(\d{2})\/(\d{2})\/(\d{4})$/);
+        if (!match) {
+            return null;
+        }
+
+        const day = Number(match[1]);
+        const month = Number(match[2]);
+        const year = Number(match[3]);
+
+        const date = new Date(year, month - 1, day);
+        if (
+            date.getFullYear() !== year ||
+            date.getMonth() !== month - 1 ||
+            date.getDate() !== day
+        ) {
+            return null;
+        }
+
+        return `${String(year).padStart(4, '0')}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+    }
+
+    private to24HourTimeFromUi(value: string): string | null {
+        const trimmed = value.trim();
+        const match = trimmed.match(/^(\d{1,2}):(\d{2})$/);
+        if (!match) {
+            return null;
+        }
+
+        const hours = Number(match[1]);
+        const minutes = Number(match[2]);
+
+        if (hours < 0 || hours > 23 || minutes < 0 || minutes > 59) {
+            return null;
+        }
+
+        return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}`;
+    }
+
     async ngOnInit() {
         await this.cargarCombo();
         if (this.modo === 'UPDATE' && this.usuarioEditando) {
             this.usuario = { ...this.usuarioEditando };
             this.usuario.fechaNacimiento = this.toDateInputValue(this.usuario.fechaNacimiento);
+            this.fechaNacimientoUi = this.formatFechaNacimientoUi(this.usuario.fechaNacimiento);
+            this.horaDesayunoUi = this.normalizeHoraDesayuno(this.usuario.horaDesayuno);
             this.direcciones = (this.usuario.direcciones || []).map(d => ({ ...d }));
             this.direccionesOriginales = (this.usuario.direcciones || []).map(d => ({ ...d }));
         } else {
             this.usuario = { ...usuarioInicial };
+            this.fechaNacimientoUi = this.formatFechaNacimientoUi(this.usuario.fechaNacimiento);
+            this.horaDesayunoUi = this.normalizeHoraDesayuno(this.usuario.horaDesayuno);
             this.direcciones = [];
             this.direccionesOriginales = [];
         }
@@ -77,6 +154,21 @@ export class UserPopupComponent implements OnInit {
     }
 
     async onSave() {
+        const fechaNacimientoIso = this.toIsoDateFromUi(this.fechaNacimientoUi);
+        if (!fechaNacimientoIso) {
+            this.errorMessage = 'BirthDate must use European format dd/MM/yyyy.';
+            return;
+        }
+
+        const horaDesayuno24h = this.to24HourTimeFromUi(this.horaDesayunoUi);
+        if (!horaDesayuno24h) {
+            this.errorMessage = 'Breakfast Time must use 24-hour format HH:mm.';
+            return;
+        }
+
+        this.usuario.fechaNacimiento = fechaNacimientoIso;
+        this.usuario.horaDesayuno = horaDesayuno24h;
+
         if (!this.validarFormulario()) {
             this.errorMessage = 'Por favor completa todos los campos requeridos.';
             return;

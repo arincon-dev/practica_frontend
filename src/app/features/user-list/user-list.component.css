@@ -1,12 +1,36 @@
-.user-list-container {
-  max-width: 1100px;
-  margin: 30px auto;
+.user-list-page {
+  min-height: 100vh;
+  background: #efefef;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 }
 
-.header-row {
+.user-list-container {
+  max-width: 1280px;
+  margin: 12px auto 20px;
+  padding: 0 8px;
+}
+
+.top-bar {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-end;
   align-items: center;
+  height: 42px;
+  background: #202225;
+  padding: 0 14px;
+  margin-bottom: 14px;
+}
+
+.logout-button {
+  border: none;
+  background: transparent;
+  color: #d8d8d8;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.logout-button:hover {
+  color: #ffffff;
 }
 .dialog-overlay {
   position: fixed;
@@ -42,62 +66,80 @@
 }
 .errorClass {
   color: red;
-  margin-top: 1em;
+  margin: 8px 0;
 }
-
-body {
-  margin: 0;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background-color: #fff;
-}
-
-
 
 table {
   width: 100%;
+  font-size: 13px;
 }
 
 .table-scroll {
-  max-height: 420px;
+  max-height: 510px;
   overflow-y: auto;
+  border: 1px solid #af7f82;
 }
 
 table, th, tr, td {
   border-collapse: collapse;
-  border: 1px solid #ad6f72;
+  border: 1px solid #ba8f91;
 }
 
 th {
   text-align: center;
-  background-color: #e51400;
+  background-color: #e40000;
   font-weight: 600;
   color: #fff;
-  padding: .3rem;
+  padding: 6px;
+  white-space: nowrap;
 }
 
 td {
   text-align: center;
   color: #000;
-  padding: .3rem;
+  padding: 5px 6px;
 }
 
-tr:nth-child(even) {background-color: #f7cecc;}
+tr:nth-child(even) {
+  background-color: #f6d6d7;
+}
 
 .container-button {
-  display: flex; /* alinear horizontalmente */
+  display: flex;
   gap: 10px;
-  margin-bottom: .8rem;
+  margin-bottom: 12px;
 }
 
 .main-button, .main-button-icon {
   width: auto;
-  height: 40px;
-  padding: .4rem .6rem;
+  height: 38px;
+  min-width: 86px;
+  padding: 6px 14px;
   border: none;
   background-color: #3c8bcb;
   cursor: pointer;
-  border-radius: .2rem;
+  border-radius: 4px;
   color: #fff;
+  font-size: 23px;
+  font-weight: 600;
+  line-height: 1;
+}
+
+.main-button-icon {
+  min-width: 50px;
+  padding: 2px 10px;
+  font-size: 24px;
+}
+
+.main-button:hover,
+.main-button-icon:hover {
+  background-color: #357db6;
+}
+
+.main-button:disabled,
+.main-button-icon:disabled {
+  opacity: .6;
+  cursor: not-allowed;
 }
 
 .default-btn {
@@ -166,6 +208,11 @@ input,textarea, select {
 
 .img-gender {
   max-height: 25px;
+}
+
+tbody td:nth-child(2) {
+  font-size: 34px;
+  line-height: 0.75;
 }
 
 .direccion-celda {

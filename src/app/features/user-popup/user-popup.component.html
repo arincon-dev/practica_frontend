@@ -2,7 +2,7 @@
 <div class="dialog-overlay"></div>
 <div class="dialog-box">
     <div class="dialog-title">
-        <h2>{{ modo === 'CREATE' ? 'Create User' : 'Update User' }}</h2>
+        <h2>Create User / Edit User</h2>
     </div>
 
     <div class="dialog-content">
@@ -37,7 +37,15 @@
 
             <div class="form-group">
                 <label>BirthDate</label>
-                <input type="date" [(ngModel)]="usuario.fechaNacimiento" name="fechaNacimiento" required>
+                <input
+                    type="text"
+                    [(ngModel)]="fechaNacimientoUi"
+                    name="fechaNacimientoUi"
+                    placeholder="dd/MM/yyyy"
+                    inputmode="numeric"
+                    autocomplete="off"
+                    required
+                >
             </div>
             <div class="form-group">
                 <label>Gender</label>
@@ -56,7 +64,15 @@
 
             <div class="form-group form-group-small">
                 <label>Breakfast Time</label>
-                <input type="time" [(ngModel)]="usuario.horaDesayuno" name="horaDesayuno" required>
+                <input
+                    type="text"
+                    [(ngModel)]="horaDesayunoUi"
+                    name="horaDesayunoUi"
+                    placeholder="HH:mm"
+                    inputmode="numeric"
+                    autocomplete="off"
+                    required
+                >
             </div>
         </form>
 

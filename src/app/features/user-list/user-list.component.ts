@@ -163,6 +163,28 @@ export class UserListComponent implements OnInit {
     return String(hora);
   }
 
+  getEdad(usuario: Usuario): string {
+    if (!usuario.fechaNacimiento) {
+      return '-';
+    }
+
+    const birthDate = new Date(usuario.fechaNacimiento);
+    if (Number.isNaN(birthDate.getTime())) {
+      return '-';
+    }
+
+    const today = new Date();
+    let age = today.getFullYear() - birthDate.getFullYear();
+    const monthDiff = today.getMonth() - birthDate.getMonth();
+    const birthdayPassed = monthDiff > 0 || (monthDiff === 0 && today.getDate() >= birthDate.getDate());
+
+    if (!birthdayPassed) {
+      age -= 1;
+    }
+
+    return age >= 0 ? String(age) : '-';
+  }
+
   getIconoGenero(usuario: Usuario): string {
     const genero = (usuario.genero?.nombre ?? '').toLowerCase();
 

@@ -15,6 +15,7 @@ The documents focus on:
 ### Feature Flows (Primary)
 
 - [Frontend features overview](frontend-features-overview.md)
+- [End-to-end flow (frontend view)](end-to-end-flow.md)
 - [Login and session flow](login-and-session-flow.md)
 - [Users list behavior](users-list-behavior.md)
 - [User popup and address sync](user-popup-and-addresses.md)

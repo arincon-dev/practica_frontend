@@ -145,3 +145,19 @@ npm start
 npm run build
 ```
 
+## 11. Decisiones de arquitectura y tradeoffs
+
+- Componentes standalone en Angular: menos configuración de módulos, arranque más simple para la práctica.
+- Capa de servicio única (`UserService`) para integración HTTP: centraliza contrato API y mapeos DTO/modelo.
+- Contrato de respuesta uniforme (`type`, `message`, `data`): simplifica parsing en frontend.
+- Sesión en localStorage con credenciales de práctica: rápido para desarrollo local, no recomendado para producción.
+- Sincronización de direcciones separada del guardado de usuario: permite controlar altas, bajas y dirección principal con orden explícito.
+
+## 12. Limitaciones actuales y no objetivos
+
+- No hay guard de ruta para `/usuarios`; la validación real ocurre al consumir API (redirige en `401`).
+- `API_URL` está hardcodeada en `src/app/shared/contants/const-urls.ts`.
+- No se usa autenticación con token/JWT ni refresh token (fuera de alcance de esta práctica).
+- No hay manejo de concurrencia optimista en edición simultánea de usuarios/direcciones.
+- El objetivo principal es flujo funcional CRUD + integración contrato backend, no hardening productivo.
+

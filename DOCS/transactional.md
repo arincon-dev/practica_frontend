@@ -14,5 +14,5 @@ This mirrors transactional thinking at UX/API orchestration level.
 - [Documentation map](map-of.md)
 - [API contract](api-contract.md)
 - [Error contract](error-contract.md)
-- [DTO/model mapping](dto-model-entity-mapping.md)
-- [Testing guide](testing-junit-mockito-assertj.md)
+- [DTO/model mapping](dto-model-mapping.md)
+- [Testing guide](frontend-testing.md)

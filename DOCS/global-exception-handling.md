@@ -1,6 +1,6 @@
-# Global Error Handling (Frontend Equivalent)
+# Global UI Error Handling
 
-Frontend equivalent of backend global exception handling is centralized HTTP error interpretation in service/helpers plus component-level UX responses.
+Error handling is centralized through service helpers and then exposed in each screen with user-friendly messages.
 
 Patterns:
 - Normalize network errors in utility helper
@@ -12,5 +12,5 @@ Patterns:
 - [Documentation map](map-of.md)
 - [API contract](api-contract.md)
 - [Error contract](error-contract.md)
-- [DTO/model mapping](dto-model-entity-mapping.md)
-- [Testing guide](testing-junit-mockito-assertj.md)
+- [DTO-model mapping](dto-model-mapping.md)
+- [Frontend testing guide](frontend-testing.md)

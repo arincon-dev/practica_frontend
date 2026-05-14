@@ -1,6 +1,6 @@
 # Component-Template Binding
 
-Backend has controller request binding; frontend equivalent is component-template binding.
+This project uses template binding patterns to connect UI state, user actions, and component logic.
 
 Patterns used:
 - `[(ngModel)]` for form fields
@@ -17,5 +17,5 @@ Design rule:
 - [Documentation map](map-of.md)
 - [API contract](api-contract.md)
 - [Error contract](error-contract.md)
-- [DTO/model mapping](dto-model-entity-mapping.md)
-- [Testing guide](testing-junit-mockito-assertj.md)
+- [DTO-model mapping](dto-model-mapping.md)
+- [Frontend testing guide](frontend-testing.md)

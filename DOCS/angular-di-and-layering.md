@@ -1,7 +1,6 @@
 # Angular DI and Layering
 
-Backend uses stereotypes (`@Controller`, `@Service`, `@Repository`).
-Frontend equivalent layering:
+The frontend uses a clear layered structure:
 - Components: view + user interaction
 - Services: HTTP integration + mapping logic
 - Models: typing contracts for UI state
@@ -18,5 +17,5 @@ Rule:
 - [Documentation map](map-of.md)
 - [API contract](api-contract.md)
 - [Error contract](error-contract.md)
-- [DTO/model mapping](dto-model-entity-mapping.md)
-- [Testing guide](testing-junit-mockito-assertj.md)
+- [DTO-model mapping](dto-model-mapping.md)
+- [Frontend testing guide](frontend-testing.md)

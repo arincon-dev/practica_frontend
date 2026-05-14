@@ -1,94 +1,106 @@
-# Frontend Angular - User Management App
+# Frontend Angular - Aplicación de gestión de usuarios
 
-Angular frontend (standalone components) integrated with the Spring Boot backend.
+Frontend Angular con componentes standalone integrado con el backend Spring Boot.
 
-## 1. Features implemented
+## Este proyecto necesita el backend
 
-- Login page
-- Users table page
-- Create user popup
-- Update user popup
-- Delete user flow
-- Address management inside user popup (create, update, delete, set main address)
+Este frontend **no funciona por sí solo**. Necesita que el backend esté ejecutándose para poder:
+- iniciar sesión
+- listar usuarios
+- crear, actualizar y eliminar usuarios/direcciones
 
-## 2. Prerequisites
+Proyecto backend relacionado:
+- https://github.com/arincon-dev/practica_backend
 
-- Node.js 18+ (LTS recommended)
+Versión en inglés: [README.en.md](README.en.md)
+
+## 1. Funcionalidades implementadas
+
+- Página de inicio de sesión
+- Página con tabla de usuarios
+- Popup para crear usuario
+- Popup para actualizar usuario
+- Flujo para eliminar usuario
+- Gestión de direcciones dentro del popup del usuario: crear, actualizar, eliminar y marcar dirección principal
+
+## 2. Requisitos previos
+
+- Node.js 18+ (se recomienda LTS)
 - npm
-- Backend running on `http://localhost:8080`
+- Backend ejecutándose en `http://localhost:8080`
 
-## 3. Install dependencies
+## 3. Instalar dependencias
 
-From this frontend folder:
+Desde esta carpeta del frontend:
 
 ```bash
 npm install
 ```
 
-## 4. Run frontend
+## 4. Ejecutar el frontend
 
 ```bash
 npm start
 ```
 
-If PowerShell blocks script execution (`npm.ps1 cannot be loaded`):
+Si PowerShell bloquea la ejecución del script (`npm.ps1 cannot be loaded`):
 
 ```powershell
 npm.cmd start
 ```
 
-App URL:
+URL de la app:
 - `http://localhost:4200`
 
-## 5. Build validation
+## 5. Validación de compilación
 
 ```bash
 npm run build
 ```
 
-If this command succeeds, the frontend is build-ready.
+Si este comando termina correctamente, el frontend está listo para compilarse.
 
-## 6. Run full stack on a new machine
+## 6. Ejecutar el stack completo en una máquina nueva
 
-Use this order:
+Sigue este orden:
 
-1. Start backend first (see backend README).
-2. Confirm backend is reachable at `http://localhost:8080/fullstack.html`.
-3. In this frontend folder run:
+1. Arranca primero el backend (ver el README del backend).
+2. Confirma que el backend responde en `http://localhost:8080/fullstack.html`.
+3. En esta carpeta del frontend ejecuta:
 
 ```bash
 npm install
 npm start
 ```
 
-4. Open `http://localhost:4200/login`.
-5. Login with backend seed credentials (for example `johnsmith` / `password123`).
-6. Validate full user flow:
-   - Users list loads
-   - Create User works
-   - Update User works
-   - Delete User works
-   - Address main flag persists after update
+4. Abre `http://localhost:4200/login`.
+5. Inicia sesión con credenciales sembradas del backend (por ejemplo `johnsmith` / `password123`).
+6. Valida el flujo completo de usuarios:
+   - La lista de usuarios carga
+   - Crear usuario funciona
+   - Actualizar usuario funciona
+   - Eliminar usuario funciona
+   - La marca de dirección principal se conserva tras actualizar
 
-## 7. Project structure
+## 7. Estructura del proyecto
 
-- `src/app/core/models` -> frontend domain models
-- `src/app/core/services` -> HTTP integration and DTO mapping
-- `src/app/features/login` -> login screen
-- `src/app/features/user-list` -> users table and actions
-- `src/app/features/user-popup` -> create/update popup and address management
-- `src/app/shared/contants` -> routes, API URL, constants
-- `DOCS` -> implementation and architecture documentation
+- `src/app/core/models` -> modelos de dominio del frontend
+- `src/app/core/services` -> integración HTTP y mapeo de DTOs
+- `src/app/features/login` -> pantalla de inicio de sesión
+- `src/app/features/user-list` -> tabla de usuarios y acciones
+- `src/app/features/user-popup` -> popup de crear/actualizar y gestión de direcciones
+- `src/app/shared/contants` -> rutas, URL de API y constantes
+- `DOCS` -> documentación de implementación y arquitectura
 
-## 8. Backend integration contract
+## 8. Contrato de integración con el backend
 
-Frontend base API URL is defined in:
+La URL base de la API del frontend está definida en:
 - `src/app/shared/contants/const-urls.ts`
 
-Current value:
+Valor actual:
 - `http://localhost:8080`
 
-Used endpoints:
+Endpoints usados:
 - `POST /api/v1/usuarios/iniciar-sesion`
 - `GET /api/v1/usuarios/`
 - `POST /api/v1/usuarios/`
@@ -101,31 +113,31 @@ Used endpoints:
 - `PUT /api/v1/direcciones/{id}`
 - `DELETE /api/v1/direcciones/{id}`
 
-Business operations include authentication query params:
+Las operaciones de negocio incluyen estos query params de autenticación:
 - `nickUsuario`
 - `nickContrasena`
 
-## 9. Troubleshooting
+## 9. Solución de problemas
 
-### Login works but users list fails
-- Clear local session and login again:
+### El login funciona pero la lista de usuarios falla
+- Limpia la sesión local e inicia sesión otra vez:
 
 ```javascript
 localStorage.clear()
 ```
 
-- Ensure backend is running on port 8080.
+- Asegúrate de que el backend esté ejecutándose en el puerto 8080.
 
-### Port 4200 already in use
+### El puerto 4200 ya está en uso
 
 ```bash
 npx ng serve --port 4201
 ```
 
-### `ERR_CONNECTION_REFUSED` or CORS-like failures
-- Backend is stopped or running on a different host/port.
+### `ERR_CONNECTION_REFUSED` o fallos parecidos a CORS
+- El backend está detenido o corre en otro host/puerto.
 
-## 10. Useful commands
+## 10. Comandos útiles
 
 ```bash
 npm install

@@ -1,35 +1,38 @@
 # Frontend Docs Map
 
-## Core Integration
-- `api-contract.md`
-- `responseentity-and-http-contract.md`
-- `error-contract.md`
+## Start Here
+- [Frontend features overview](frontend-features-overview.md)
+- [Login and session flow](login-and-session-flow.md)
+- [Users list behavior](users-list-behavior.md)
+- [User popup and address sync](user-popup-and-addresses.md)
 
-## Architecture and Flow
-- `spring-stereotypes-and-di.md` (Angular DI equivalent)
-- `controller-request-binding.md` (component to template binding)
-- `dto-model-entity-mapping.md`
-- `transactional.md` (frontend consistency and save flow)
-- `frontend-implementation-guide.md` (complete implementation walkthrough)
+## Code Entry Points
+- `src/app/app.routes.ts`
+- `src/app/features/login/login.component.ts`
+- `src/app/features/user-list/user-list.component.ts`
+- `src/app/features/user-popup/user-popup.component.ts`
+- `src/app/core/services/user.service.ts`
 
-## Data and Formatting
-- `java-date-and-time-types.md` (date/time interoperability)
-- `validation-and-schema-annotations.md` (frontend validation rules)
+## Contract and Mapping
+- [API contract](api-contract.md)
+- [Error contract](error-contract.md)
+- [DTO-model mapping](dto-model-mapping.md)
+- [Response envelope and HTTP contract](response-envelope-and-http-contract.md)
 
-## Quality
-- `testing-junit-mockito-assertj.md` (Angular testing equivalent)
+## UI, Validation, and Error Handling
+- [Component-template binding](component-template-binding.md)
+- [Validation strategy](validation-and-schema-annotations.md)
+- [Save consistency flow](transactional.md)
+- [Global UI error handling](global-exception-handling.md)
+- [Date and time interoperability](date-and-time-handling.md)
 
-## Optional patterns
-- `optional-and-orelsethrow.md`
-- `streams-and-method-references.md`
-- `jpa-repositories-and-queries.md`
-- `flyway-migrations.md`
-- `global-exception-handling.md`
+## Testing
+- [Frontend testing guide](frontend-testing.md)
 
 ## Related Docs
 - [DOCS index](README.md)
 - [Documentation map](map-of.md)
 - [API contract](api-contract.md)
 - [Error contract](error-contract.md)
-- [DTO/model mapping](dto-model-entity-mapping.md)
-- [Testing guide](testing-junit-mockito-assertj.md)
+- [DTO/model mapping](dto-model-mapping.md)
+- [Testing guide](frontend-testing.md)

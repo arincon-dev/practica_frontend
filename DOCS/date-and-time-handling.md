@@ -1,6 +1,6 @@
-# Java Date/Time Interoperability
+# Date and Time Handling in Frontend
 
-Backend sends date/time values as JSON strings.
+The API sends date/time values as JSON strings.
 
 Frontend handling:
 - Creation date displayed via date formatting
@@ -15,5 +15,5 @@ Common pitfall:
 - [Documentation map](map-of.md)
 - [API contract](api-contract.md)
 - [Error contract](error-contract.md)
-- [DTO/model mapping](dto-model-entity-mapping.md)
-- [Testing guide](testing-junit-mockito-assertj.md)
+- [DTO-model mapping](dto-model-mapping.md)
+- [Users list behavior](users-list-behavior.md)

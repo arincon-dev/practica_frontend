@@ -8,7 +8,7 @@ Conventions:
 - HTTP/network failures are wrapped by utility helper (`to(...)`) into array-style error result
 
 Rationale:
-- Keeps frontend aligned with backend envelope contract
+- Keeps frontend aligned with the API envelope contract
 - Centralizes parsing/mapping in service layer
 
 ## Related Docs
@@ -16,5 +16,5 @@ Rationale:
 - [Documentation map](map-of.md)
 - [API contract](api-contract.md)
 - [Error contract](error-contract.md)
-- [DTO/model mapping](dto-model-entity-mapping.md)
-- [Testing guide](testing-junit-mockito-assertj.md)
+- [DTO-model mapping](dto-model-mapping.md)
+- [Frontend testing guide](frontend-testing.md)

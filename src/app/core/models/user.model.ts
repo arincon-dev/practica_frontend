@@ -3,19 +3,19 @@ import {PuestoDeTrabajo} from "./puestodetrabajo.model";
 import {Direccion} from "./direccion.model";
 
 export interface Usuario {
-  id: number;
-  nickUsuario: string;
-  nombre: string;
-  contrasena: string;
+  id: number | null;
+  nickUsuario: string | null;
+  nombre: string | null;
+  contrasena: string | null;
   fechaHoraCreacion: Date;
   genero: Genero;
-  primerApellido: string;
-  segundoApellido: string;
-  fechaNacimiento: Date;
-  horaDesayuno: string;
+  primerApellido: string | null;
+  segundoApellido: string | null;
+  fechaNacimiento: Date | string | null;
+  horaDesayuno: string | null;
   puestoTrabajo: PuestoDeTrabajo;
   admin: boolean;
-  direcciones: Direccion[];
+  direcciones: Direccion[] | null;
 }
 
 export const usuarioInicial: Usuario = {

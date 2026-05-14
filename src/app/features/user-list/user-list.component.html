@@ -1,14 +1,78 @@
 
-<app-user-popup *ngIf="modoPopup !== 'CLOSED'"
+<app-user-popup *ngIf="modoPopup === 'CREATE' || modoPopup === 'UPDATE'"
+                [modo]="modoPopup"
+                [usuarioEditando]="usuarioEnEdicion"
                 (cerrarPopUpOk)="onCerrarPopUpOk()"
                 (cerrarPopUpCancel)="onCerrarPopUpCancel()"
 />
 
+<div class="dialog-overlay" *ngIf="modoPopup === 'DELETE'"></div>
+<div class="dialog-box" *ngIf="modoPopup === 'DELETE'">
+    <div class="dialog-title">
+        <h2>¿Estás seguro de que deseas eliminar el usuario seleccionado?</h2>
+    </div>
+    <div class="dialog-actions">
+        <button class="main-button" (click)="cancelarEliminarUsuario()">Cancelar</button>
+        <button class="main-button" (click)="confirmarEliminarUsuario()">Sí</button>
+    </div>
+</div>
+
 <div class="user-list-container">
-    <h2>User List</h2>
-    <!-- @TODO: Implement user list display here -->
-    <div>
-        <button (click)="launchPopup()">Popup</button>
+    <div class="header-row">
+        <h2>User List</h2>
+        <button class="main-button" (click)="logout()">Logout</button>
     </div>
 
+    <div class="container-button">
+        <button class="main-button" (click)="abrirCrearUsuario()">Create User</button>
+        <button class="main-button" [disabled]="selectedUserIndex < 0" (click)="abrirEditarUsuario()">Update User</button>
+        <button class="main-button" [disabled]="selectedUserIndex < 0" (click)="abrirEliminarUsuario()">Delete User</button>
+    </div>
+
+    <div *ngIf="loading">Cargando usuarios...</div>
+    <div *ngIf="errorMessage" class="errorClass">{{ errorMessage }}</div>
+
+    <div class="table-scroll" *ngIf="!loading && usuarios.length > 0">
+        <table>
+            <thead>
+            <tr>
+                <th></th>
+                <th>Genero</th>
+                <th>Usuario</th>
+                <th>Nombre completo</th>
+                <th>Fecha creacion</th>
+                <th>Hora desayuno</th>
+                <th>Puesto</th>
+                <th>Direccion principal</th>
+                <th>+ Direcciones</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let usuario of usuarios; let i = index">
+                <td>
+                    <input
+                        type="radio"
+                        name="usuarioSeleccionado"
+                        [checked]="selectedUserIndex === i"
+                        (change)="seleccionarUsuario(i)"
+                    />
+                </td>
+                <td>{{ getIconoGenero(usuario) }}</td>
+                <td>{{ usuario.nickUsuario }}</td>
+                <td>{{ getNombreCompleto(usuario) }}</td>
+                <td>{{ usuario.fechaHoraCreacion | date : 'yyyy-MM-dd HH:mm' }}</td>
+                <td>{{ getHoraDesayuno(usuario) }}</td>
+                <td>{{ usuario.puestoTrabajo?.nombre || '-' }}</td>
+                <td class="direccion-celda" [title]="getDireccionPrincipal(usuario)">
+                    {{ getDireccionPrincipal(usuario) }}
+                </td>
+                <td>{{ getDireccionesExtra(usuario) }}</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div *ngIf="!loading && usuarios.length === 0">
+        No hay usuarios para mostrar.
+    </div>
 </div>

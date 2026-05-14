@@ -1,6 +1,12 @@
 .user-list-container {
-  max-width: 600px;
+  max-width: 1100px;
   margin: 30px auto;
+}
+
+.header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 .dialog-overlay {
   position: fixed;
@@ -22,6 +28,18 @@
   border-radius: 8px;
   min-width: 500px;
 }
+
+.dialog-title h2 {
+  margin: 0;
+  font-size: 20px;
+}
+
+.dialog-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 20px;
+}
 .errorClass {
   color: red;
   margin-top: 1em;
@@ -37,6 +55,11 @@ body {
 
 table {
   width: 100%;
+}
+
+.table-scroll {
+  max-height: 420px;
+  overflow-y: auto;
 }
 
 table, th, tr, td {
@@ -143,4 +166,11 @@ input,textarea, select {
 
 .img-gender {
   max-height: 25px;
+}
+
+.direccion-celda {
+  max-width: 220px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }

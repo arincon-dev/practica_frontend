@@ -57,3 +57,9 @@ baseline.json
 
 # pnpm store
 .pnpm-store
+
+# Environment variable files
+.env
+
+# Personal notes
+/notes/

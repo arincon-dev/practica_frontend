@@ -2,6 +2,11 @@
 
 Angular frontend (standalone components) integrated with the Spring Boot backend.
 
+## Overview
+
+This application is part of a fullstack practice project focused on user management.
+It allows you to sign in, review the users list, and manage user data (create, update, delete), including address management.
+
 ## This project needs the backend
 
 This frontend **does not work on its own**. It needs the backend running to:

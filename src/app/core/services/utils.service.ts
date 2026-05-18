@@ -5,18 +5,14 @@ import {Usuario} from "../models/user.model";
 
 export default async function to(promise: Promise<any>) {
     try {
-        const data = await promise
-        return data
+        return await promise;
     } catch (err) {
-        return [err]
+        return [err];
     }
 }
 
 export function isOkResponse(response) {
-    if (response && response.body && response.body.type === "OK") {
-        return true
-    }
-    return false
+    return response?.body?.type === "OK";
 }
 
 export function loadResponseData(response) {
@@ -26,9 +22,9 @@ export function loadResponseData(response) {
 export function loadResponseError(response) {
     if (!response || !response.body || !response.body.exception) {
         return "Error inesperado de servidor";
-    } else {
-        return response.body.exception.codigoDeError + ' ' + response.body.exception.mensajeDeError;
     }
+
+    return response.body.exception.codigoDeError + ' ' + response.body.exception.mensajeDeError;
 }
 
 export const headers = new HttpHeaders({
@@ -46,6 +42,6 @@ export function guardarUsuarioLogado(usuario: Usuario) {
     localStorage.setItem(ConstLocalStorage.USUARIO_LOGADO_STORAGE, JSON.stringify(usuario));
 }
 
-export function obtenerUsuarioLogado(): Usuario {
+export function obtenerUsuarioLogado(): Usuario | null {
     return JSON.parse(localStorage.getItem(ConstLocalStorage.USUARIO_LOGADO_STORAGE));
 }
